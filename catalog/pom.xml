@@ -76,6 +76,12 @@
 			<artifactId>liquibase-maven-plugin</artifactId>
 			<version>${org.liquibase.version}</version>
 		</dependency>
+
+		<!-- RabbitAMQP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

@@ -28,7 +28,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<BookDto> createBook(BookDto bookDto) {
-        return Optional.of(bookMapper.map(bookRepository.save(bookMapper.map(bookDto))));
+        Book book = bookMapper.map(bookDto);
+        bookRepository.save(book);
+        return Optional.of(bookMapper.map(book));
     }
 
     @Override
