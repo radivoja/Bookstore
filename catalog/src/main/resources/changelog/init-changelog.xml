@@ -16,4 +16,10 @@
             <column name="price" type="double precision"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="2" author="radivoja">
+        <addColumn tableName="book">
+            <column name="status" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -1,6 +1,8 @@
 package com.bookstore.catalog.service.implementation;
 
 import com.bookstore.catalog.dto.BookDto;
+import com.bookstore.catalog.dto.BookQuantityChangedDto;
+import com.bookstore.catalog.enums.Status;
 import com.bookstore.catalog.entity.Book;
 import com.bookstore.catalog.mappers.BookMapper;
 import com.bookstore.catalog.repository.BookRepository;
@@ -51,6 +53,25 @@ public class BookServiceImpl implements BookService {
             return Optional.of(new BookDto());
         } else {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public void updateStatus(BookQuantityChangedDto bookQuantityChangedDto) {
+        Optional<Book> book = bookRepository.findById(bookQuantityChangedDto.getBookId());
+        if(book.isPresent()){
+            if(bookQuantityChangedDto.getTotalCount() > 0){
+                if(!book.get().getStatus().equals(Status.IN_STOCK)){
+                    book.get().setStatus(Status.IN_STOCK);
+                    bookRepository.save(book.get());
+                }
+            }
+            else{
+                if(!book.get().getStatus().equals(Status.OUT_OF_STOCK)){
+                    book.get().setStatus(Status.OUT_OF_STOCK);
+                    bookRepository.save(book.get());
+                }
+            }
         }
     }
 }

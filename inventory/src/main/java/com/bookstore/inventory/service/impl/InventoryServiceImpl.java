@@ -1,8 +1,8 @@
 package com.bookstore.inventory.service.impl;
 
 import com.bookstore.inventory.dto.BookMessageDto;
-import com.bookstore.inventory.entity.Book;
-import com.bookstore.inventory.repository.BookRepository;
+import com.bookstore.inventory.entity.Inventory;
+import com.bookstore.inventory.repository.InventoryRepository;
 import com.bookstore.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,12 +13,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
-    private final BookRepository bookRepository;
+    private final InventoryRepository inventoryRepository;
 
 
     @Override
     public int copies(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
+        Optional<Inventory> book = inventoryRepository.findById(id);
         if(book.isPresent()){
             return book.get().getQuantity();
         }
@@ -26,41 +26,44 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public int add(Long id, int amount) {
-        Optional<Book> book = bookRepository.findById(id);
-        if(book.isPresent() && amount > 0){
-            int newTotal = book.get().getQuantity() + amount;
-            book.get().setQuantity(newTotal);
-            return newTotal;
+    public Optional<Integer> add(Long id, int amount) {
+        Optional<Inventory> inventory = inventoryRepository.findById(id);
+        if(inventory.isPresent() && amount > 0){
+            int newTotal = inventory.get().getQuantity() + amount;
+            inventory.get().setQuantity(newTotal);
+            inventoryRepository.save(inventory.get());
+            return Optional.of(newTotal);
         }
-        return 0;
+        return Optional.empty();
     }
 
     @Override
-    public int remove(Long id, int amount) {
-        Optional<Book> book = bookRepository.findById(id);
-        if(book.isPresent() && amount > 0){
-            int newTotal = book.get().getQuantity() - amount;
-            if(newTotal > 0){
-                book.get().setQuantity(newTotal);
+    public Optional<Integer> remove(Long id, int amount) {
+        Optional<Inventory> inventory = inventoryRepository.findById(id);
+        if(inventory.isPresent() && amount > 0){
+            int newTotal = inventory.get().getQuantity() - amount;
+            if(newTotal >= 0){
+                inventory.get().setQuantity(newTotal);
+                inventoryRepository.save(inventory.get());
+                return Optional.of(newTotal);
             }
-            return newTotal;
         }
-        return 0;
+        return Optional.empty();
     }
 
     @Override
     public void insertNewBook(BookMessageDto message) {
-        Book book = Book.builder()
+        Inventory inventory = Inventory.builder()
                 .title(message.getTitle())
                 .genre(message.getGenre())
                 .author(message.getAuthor())
                 .price(message.getPrice())
                 .bookId(message.getId())
                 .quantity(0)
+                .reserved(0)
                 .build();
 
-        bookRepository.save(book);
+        inventoryRepository.save(inventory);
 
     }
 }

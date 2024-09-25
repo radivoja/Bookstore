@@ -1,5 +1,6 @@
 package com.bookstore.catalog.dto;
 
+import com.bookstore.catalog.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class BookDto {
     private String author;
     private String genre;
     private Double price;
+    private Status Status;
 }

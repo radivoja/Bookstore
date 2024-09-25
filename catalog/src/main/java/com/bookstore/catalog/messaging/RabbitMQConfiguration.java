@@ -15,6 +15,12 @@ public class RabbitMQConfiguration {
     public Queue newBookAddedQueue(){
         return new Queue("newBookAddedQueue");
     }
+
+    @Bean
+    public Queue bookQuantityChanged(){
+        return new Queue("BookQuantityChanged");
+    }
+
     @Bean
     public MessageConverter jsonMessageConverter(){
         return new Jackson2JsonMessageConverter();

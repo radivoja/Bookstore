@@ -18,4 +18,22 @@
             <column name="quantity" type="integer"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="2" author="radivoja">
+        <renameTable oldTableName="book" newTableName="inventory"/>
+    </changeSet>
+
+    <changeSet id="3" author="radivoja">
+        <dropColumn tableName="inventory" columnName="id"/>
+    </changeSet>
+
+    <changeSet id="4" author="radivoja">
+        <addPrimaryKey tableName="inventory" columnNames="book_id"/>
+    </changeSet>
+
+    <changeSet id="5" author="radivoja">
+        <addColumn tableName="inventory">
+            <column name="reserved" type="integer"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

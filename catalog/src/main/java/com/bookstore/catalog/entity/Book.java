@@ -1,9 +1,7 @@
 package com.bookstore.catalog.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.bookstore.catalog.enums.Status;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +20,6 @@ public class Book {
     private String author;
     private String genre;
     private Double price;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }
