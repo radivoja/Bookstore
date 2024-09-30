@@ -2,6 +2,7 @@ package com.bookstore.inventory.service;
 
 
 import com.bookstore.inventory.dto.BookMessageDto;
+import com.bookstore.inventory.dto.OrderCreatedDto;
 
 import java.util.Optional;
 
@@ -15,4 +16,7 @@ public interface InventoryService {
 
     void insertNewBook(BookMessageDto message);
 
+    boolean orderAccepted(OrderCreatedDto order);
+
+    void reserveBooks(OrderCreatedDto order);
 }

@@ -1,4 +1,4 @@
-package com.bookstore.inventory.messaging;
+package com.bookstore.order.messaging;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -12,23 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
 
     @Bean
-    public Queue newBookAddedQueue(){
-        return new Queue("newBookAddedQueue");
-    }
-
-    @Bean
-    public Queue bookQuantityChanged(){
-        return new Queue("BookQuantityChanged");
-    }
-
-    @Bean
-    public Queue orderAccepted(){
-        return new Queue("OrderAccepted");
-    }
-
-    @Bean
-    public Queue orderRejected(){
-        return new Queue("OrderRejected");
+    public Queue orderCreated(){
+        return new Queue("OrderCreated");
     }
 
     @Bean

@@ -1,7 +1,8 @@
 package com.bookstore.inventory.service.impl;
 
-import com.bookstore.inventory.dto.BookMessageDto;
+import com.bookstore.inventory.dto.*;
 import com.bookstore.inventory.entity.Inventory;
+import com.bookstore.inventory.messaging.BookMessageProducer;
 import com.bookstore.inventory.repository.InventoryRepository;
 import com.bookstore.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
-
+    private final BookMessageProducer bookMessageProducer;
 
     @Override
     public int copies(Long id) {
         Optional<Inventory> book = inventoryRepository.findById(id);
         if(book.isPresent()){
-            return book.get().getQuantity();
+            return book.get().getQuantity() - book.get().getReserved();
         }
         return 0;
     }
@@ -64,6 +65,40 @@ public class InventoryServiceImpl implements InventoryService {
                 .build();
 
         inventoryRepository.save(inventory);
+    }
 
+    @Override
+    public boolean orderAccepted(OrderCreatedDto order) {
+        // For each book ordered check if there enough copies
+        for(BookDto book : order.getBooks()){
+            int availableCopies = copies(book.getBookId());
+            if(availableCopies < book.getQuantity()){
+                OrderRejectedDto orderRejectedDto = new OrderRejectedDto();
+                orderRejectedDto.setOrderId(order.getOrderId());
+                orderRejectedDto.setReason("Not enough available copies for: " + book.getBookId());
+
+                bookMessageProducer.sendOrderRejectedMessage(orderRejectedDto);
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    @Override
+    public void reserveBooks(OrderCreatedDto order) {
+        for(BookDto book : order.getBooks()){
+            Optional<Inventory> inventory = inventoryRepository.findById(book.getBookId());
+            if(inventory.isPresent()){
+                inventory.get().setReserved(inventory.get().getReserved() + book.getQuantity());
+                inventoryRepository.save(inventory.get());
+            }
+        }
+
+        OrderAcceptedDto orderAcceptedDto = new OrderAcceptedDto();
+        orderAcceptedDto.setOrderId(order.getOrderId());
+        orderAcceptedDto.setBooks(order.getBooks());
+
+        bookMessageProducer.sendOrderAcceptedMessage(orderAcceptedDto);
     }
 }
