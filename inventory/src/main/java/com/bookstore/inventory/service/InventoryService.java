@@ -19,4 +19,6 @@ public interface InventoryService {
     boolean orderAccepted(OrderCreatedDto order);
 
     void reserveBooks(OrderCreatedDto order);
+
+    void removeReservation(Long id);
 }

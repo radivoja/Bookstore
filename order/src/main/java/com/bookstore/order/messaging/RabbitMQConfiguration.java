@@ -17,6 +17,11 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public Queue orderConfirmed(){
+        return new Queue("OrderConfirmed");
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter(){
         return new Jackson2JsonMessageConverter();
     }

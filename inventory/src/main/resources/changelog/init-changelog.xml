@@ -36,4 +36,21 @@
             <column name="reserved" type="integer"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="6" author="radivoja">
+        <addColumn tableName="inventory">
+            <column name="order_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="7" author="radivoja">
+        <dropColumn tableName="inventory">
+            <column name="title"/>
+            <column name="author"/>
+            <column name="genre"/>
+            <column name="price"/>
+        </dropColumn>
+    </changeSet>
+
+
 </databaseChangeLog>

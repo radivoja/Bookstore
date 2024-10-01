@@ -1,6 +1,5 @@
-package com.bookstore.inventory.messaging;
+package com.bookstore.notification.messaging;
 
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -10,22 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfiguration {
-
-    @Bean
-    public Queue bookQuantityChanged(){
-        return new Queue("BookQuantityChanged");
-    }
-
-    @Bean
-    public Queue orderAccepted(){
-        return new Queue("OrderAccepted");
-    }
-
-    @Bean
-    public Queue orderRejected(){
-        return new Queue("OrderRejected");
-    }
-
     @Bean
     public MessageConverter jsonMessageConverter(){
         return new Jackson2JsonMessageConverter();

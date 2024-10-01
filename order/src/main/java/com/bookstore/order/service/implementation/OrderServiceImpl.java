@@ -1,9 +1,11 @@
 package com.bookstore.order.service.implementation;
 
+import com.bookstore.order.dto.OrderConfirmed;
 import com.bookstore.order.dto.OrderDto;
 import com.bookstore.order.entity.Order;
 import com.bookstore.order.enums.Status;
 import com.bookstore.order.mappers.OrderMapper;
+import com.bookstore.order.messaging.OrderMessageProducer;
 import com.bookstore.order.repository.OrderRepository;
 import com.bookstore.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final OrderMessageProducer orderMessageProducer;
 
     @Override
     public List<OrderDto> getOrders() {
@@ -67,6 +70,11 @@ public class OrderServiceImpl implements OrderService {
         if(order.isPresent()){
             order.get().setStatus(status);
             orderRepository.save(order.get());
+            if(status.equals(Status.ACCEPTED)){
+                OrderConfirmed orderConfirmed = new OrderConfirmed();
+                orderConfirmed.setOrderId(id);
+                orderMessageProducer.sendOrderConfirmed(orderConfirmed);
+            }
         }
     }
 }

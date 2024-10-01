@@ -8,6 +8,7 @@ import com.bookstore.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -55,10 +56,6 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public void insertNewBook(BookMessageDto message) {
         Inventory inventory = Inventory.builder()
-                .title(message.getTitle())
-                .genre(message.getGenre())
-                .author(message.getAuthor())
-                .price(message.getPrice())
                 .bookId(message.getId())
                 .quantity(0)
                 .reserved(0)
@@ -91,6 +88,7 @@ public class InventoryServiceImpl implements InventoryService {
             Optional<Inventory> inventory = inventoryRepository.findById(book.getBookId());
             if(inventory.isPresent()){
                 inventory.get().setReserved(inventory.get().getReserved() + book.getQuantity());
+                inventory.get().setOrderId(order.getOrderId());
                 inventoryRepository.save(inventory.get());
             }
         }
@@ -100,5 +98,15 @@ public class InventoryServiceImpl implements InventoryService {
         orderAcceptedDto.setBooks(order.getBooks());
 
         bookMessageProducer.sendOrderAcceptedMessage(orderAcceptedDto);
+    }
+
+    @Override
+    public void removeReservation(Long order) {
+        List<Inventory> inventories = inventoryRepository.findByOrderId(order);
+        for(Inventory inventory : inventories){
+            inventory.setQuantity(inventory.getQuantity() - inventory.getReserved());
+            inventory.setReserved(0);
+            inventoryRepository.save(inventory);
+        }
     }
 }

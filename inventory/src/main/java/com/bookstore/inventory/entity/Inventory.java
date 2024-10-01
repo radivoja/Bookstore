@@ -15,10 +15,7 @@ import lombok.NoArgsConstructor;
 public class Inventory {
     @Id
     private Long bookId;
-    private String title;
-    private String author;
-    private String genre;
-    private Double price;
     private Integer quantity;
     private Integer reserved;
+    private Long orderId;
 }

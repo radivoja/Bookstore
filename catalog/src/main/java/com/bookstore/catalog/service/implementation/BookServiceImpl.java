@@ -31,6 +31,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookDto> createBook(BookDto bookDto) {
         Book book = bookMapper.map(bookDto);
+        book.setStatus(Status.OUT_OF_STOCK);
         bookRepository.save(book);
         return Optional.of(bookMapper.map(book));
     }
@@ -61,16 +62,13 @@ public class BookServiceImpl implements BookService {
         Optional<Book> book = bookRepository.findById(bookQuantityChangedDto.getBookId());
         if(book.isPresent()){
             if(bookQuantityChangedDto.getTotalCount() > 0){
-                if(!book.get().getStatus().equals(Status.IN_STOCK)){
-                    book.get().setStatus(Status.IN_STOCK);
-                    bookRepository.save(book.get());
-                }
+                 book.get().setStatus(Status.IN_STOCK);
+                 bookRepository.save(book.get());
+        
             }
             else{
-                if(!book.get().getStatus().equals(Status.OUT_OF_STOCK)){
-                    book.get().setStatus(Status.OUT_OF_STOCK);
-                    bookRepository.save(book.get());
-                }
+                book.get().setStatus(Status.OUT_OF_STOCK);
+                bookRepository.save(book.get());
             }
         }
     }

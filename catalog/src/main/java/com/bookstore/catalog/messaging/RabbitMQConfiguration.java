@@ -12,13 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
 
     @Bean
-    public Queue newBookAddedQueue(){
-        return new Queue("newBookAddedQueue");
-    }
-
-    @Bean
-    public Queue bookQuantityChanged(){
-        return new Queue("BookQuantityChanged");
+    public Queue newBookAdded(){
+        return new Queue("NewBookAdded");
     }
 
     @Bean

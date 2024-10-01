@@ -1,5 +1,6 @@
 package com.bookstore.order.messaging;
 
+import com.bookstore.order.dto.OrderConfirmed;
 import com.bookstore.order.dto.OrderCreatedDto;
 import com.bookstore.order.dto.OrderDto;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,9 @@ public class OrderMessageProducer {
                 .build();
 
         rabbitTemplate.convertAndSend("OrderCreated", message);
+    }
+
+    public void sendOrderConfirmed(OrderConfirmed message){
+        rabbitTemplate.convertAndSend("OrderConfirmed", message);
     }
 }

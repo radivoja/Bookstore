@@ -11,6 +11,6 @@ public class BookMessageProducer {
     private final RabbitTemplate rabbitTemplate;
 
     public void sendMessage(BookDto book){
-        rabbitTemplate.convertAndSend("newBookAddedQueue", book);
+        rabbitTemplate.convertAndSend("NewBookAdded", book);
     }
 }
