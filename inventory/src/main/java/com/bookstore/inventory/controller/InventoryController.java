@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/bookstore/books")
+@RequestMapping("/bookstore/inventory")
 public class InventoryController {
     private final InventoryService inventoryService;
     private final BookMessageProducer bookMessageProducer;

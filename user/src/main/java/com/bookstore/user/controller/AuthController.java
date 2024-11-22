@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/bookstore/users")
+@RequestMapping("/bookstore/auth")
 @RestController
 @Data
 public class AuthController {
